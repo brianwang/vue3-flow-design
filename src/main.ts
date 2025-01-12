@@ -5,14 +5,15 @@ import { registerIconsComp } from './icons';
 import 'ant-design-vue/dist/antd.less';
 import '/@/assets/style/index.less';
 import Storage from 'vue-lsp';
-
+import ElementPlus from 'element-plus';
+import 'element-plus/dist/index.css';
 const app = createApp(App);
 
 // 按需注册ICON组件
 registerIconsComp(app);
 // 按需注册ant组件
 registerAntdComp(app);
-
+app.use(ElementPlus);
 app.use(Storage, {
   namespace: 'flow__', // key prefix
   name: 'ls', // name variable [ls] or [$ls],

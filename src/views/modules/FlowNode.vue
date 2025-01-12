@@ -60,6 +60,24 @@
   </div>
 
   <div
+    v-else-if="node.type === CommonNodeTypeEnum.CREATE"
+    :id="node.id"
+    class="common-create-node"
+    :class="{ active: isActive() }"
+    :style="{
+      top: node.y + 'px',
+      left: node.x + 'px',
+      cursor: setCursor(currentTool.type),
+    }"
+    @click.stop="selectNode"
+    @contextmenu.stop="showNodeContextMenu"
+  >
+    <div>
+      <create-node />
+    </div>
+  </div>
+
+  <div
     v-else-if="node.type === LaneNodeTypeEnum.X_LANE"
     :id="node.id"
     class="common-x_lane-node"
@@ -114,7 +132,7 @@
     ActionsTypeEnum,
   } from '/@/type/enums';
   import { INode, ILink, ITool, NodesType } from '/@/type/index';
-
+  import CreateNode from '../nodes/Create.vue';
   const props = defineProps({
     select: {
       type: Object as PropType<INode | ILink>,
@@ -198,7 +216,7 @@
         // 判断节点类型
         let possibles =
           el?.parentNode?.querySelectorAll(
-            '.common-circle-node,.common-rectangle-node,.common-diamond-node,.lane-text-div',
+            '.common-circle-node,.common-rectangle-node,.common-diamond-node,.lane-text-div,.common-create-node',
           ) ?? [];
 
         for (let i = 0; i < possibles?.length; i++) {

@@ -8,28 +8,28 @@
         @setDragInfo="setDragInfo"
       />
     </a-row>
-    <a-row>
+    <!-- <a-row>
       <div class="tab">高级</div>
       <FlowElementList
         :nodeList="highNodes"
         :belongTo="NodeTypeEnum.High_Node_Type"
         @setDragInfo="setDragInfo"
       />
-    </a-row>
-    <a-row>
+    </a-row> -->
+    <!-- <a-row>
       <div class="tab">泳道</div>
       <FlowElementList
         :nodeList="laneNodes"
         :belongTo="NodeTypeEnum.Lane_Node_Type"
         @setDragInfo="setDragInfo"
       />
-    </a-row>
+    </a-row> -->
   </a-layout-sider>
 </template>
 
 <script lang="ts" setup>
   import FlowElementList from './FlowElementList.vue';
-  import { commonNodes, highNodes, laneNodes } from '/@/config/nodes';
+  import { commonNodes } from '/@/config/nodes';
   import { IDragInfo } from '/@/type/index';
   import { NodeTypeEnum } from '/@/type/enums';
 

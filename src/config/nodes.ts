@@ -2,36 +2,46 @@ import { CommonNodeTypeEnum, HighNodeTypeEnum, LaneNodeTypeEnum } from '/@/type/
 import { IElement } from '/@/type/index';
 
 export const commonNodes: IElement[] = [
+  // {
+  //   type: CommonNodeTypeEnum.START,
+  //   nodeName: '开始',
+  //   icon: 'PlayCircleOutlined',
+  // },
   {
-    type: CommonNodeTypeEnum.START,
-    nodeName: '开始',
+    type: CommonNodeTypeEnum.CREATE,
+    nodeName: '创建',
     icon: 'PlayCircleOutlined',
   },
   {
-    type: CommonNodeTypeEnum.COMMON,
-    nodeName: '人工节点',
-    icon: 'UserOutlined',
+    type: CommonNodeTypeEnum.SIGNAL,
+    nodeName: '消息',
+    icon: 'PlayCircleOutlined',
   },
-  {
-    type: CommonNodeTypeEnum.FREEDOM,
-    nodeName: '自动节点',
-    icon: 'SyncOutlined',
-  },
-  {
-    type: CommonNodeTypeEnum.GATEWAY,
-    nodeName: '网关',
-    icon: 'GatewayOutlined',
-  },
-  {
-    type: CommonNodeTypeEnum.EVENT,
-    nodeName: '事件',
-    icon: 'SelectOutlined',
-  },
-  {
-    type: CommonNodeTypeEnum.END,
-    nodeName: '结束',
-    icon: 'StopOutlined',
-  },
+  // {
+  //   type: CommonNodeTypeEnum.COMMON,
+  //   nodeName: '人工节点',
+  //   icon: 'UserOutlined',
+  // },
+  // {
+  //   type: CommonNodeTypeEnum.FREEDOM,
+  //   nodeName: '自动节点',
+  //   icon: 'SyncOutlined',
+  // },
+  // {
+  //   type: CommonNodeTypeEnum.GATEWAY,
+  //   nodeName: '网关',
+  //   icon: 'GatewayOutlined',
+  // },
+  // {
+  //   type: CommonNodeTypeEnum.EVENT,
+  //   nodeName: '事件',
+  //   icon: 'SelectOutlined',
+  // },
+  // {
+  //   type: CommonNodeTypeEnum.END,
+  //   nodeName: '结束',
+  //   icon: 'StopOutlined',
+  // },
 ];
 
 export const highNodes: IElement[] = [

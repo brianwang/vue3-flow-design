@@ -217,7 +217,7 @@
     return {
       top: `${container.pos.top}px`,
       left: `${container.pos.left}px`,
-      transform: `scale(${container.scale})`,
+      //transform: `scale(${container.scale})`,
       transformOrigin: `${container.scaleOrigin.x}px ${container.scaleOrigin.y}px`,
     };
   });
