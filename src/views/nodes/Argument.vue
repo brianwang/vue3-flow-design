@@ -4,22 +4,9 @@
     <hr />
     <el-form :model="form" label-width="auto" style="max-width: 800px">
       <el-form-item :label="field.name" v-for="field in fields" :key="field.name">
-        <div v-if="field.type == 'argument'">
-          <el-input v-model="field.value" :name="field.name" v-if="field.format == 'string'" />
-          <el-input-number
-            v-model="field.value"
-            :name="field.name"
-            v-if="field.format == 'number'"
-          />
-          <el-switch v-model="field.value" class="ml-2" v-if="field.format == 'boolean'" />
-        </div>
-        <div v-if="field.type == 'option'">
-          <el-form-item v-for="(option, index) in field.options" :key="index">
-            <el-input v-model="field.options[index]" />
-            <el-button @click="clickAdd(option)">+</el-button>
-            <el-button @click="field.options.splice(index, 1)">-</el-button>
-          </el-form-item>
-        </div>
+        <el-input v-model="field.value" :name="field.name" v-if="field.format == 'string'" />
+        <el-input-number v-model="field.value" :name="field.name" v-if="field.format == 'number'" />
+        <el-switch v-model="field.value" class="ml-2" v-if="field.format == 'boolean'" />
         <el-button @click.prevent="clickAdd(field)" v-if="field.type != 'argument'">+</el-button>
         <el-button @click.prevent="clickRm(field)">-</el-button>
       </el-form-item>
