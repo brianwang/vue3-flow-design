@@ -1,13 +1,15 @@
 <template>
   <div>
-    <h1>Job</h1>
-    <el-button @click="clickAdd">+</el-button>
-    <div v-for="field in fields" :key="field.name">
-      <label>{{ field.name }}:</label>
-      <input :type="field.type" :id="field.id" :name="field.name" :value="field.value" />
-      <button @click.prevent="clickAdd">+</button>
-      <button @click.prevent="clickRm">-</button>
-    </div>
+    <h1>Job <el-button @click="rootAdd">+</el-button></h1>
+    <hr />
+    <el-form :model="form" label-width="auto" style="max-width: 800px">
+      <el-form-item :label="field.name" v-for="field in fields" :key="field.name">
+        <el-input v-model="field.value" :name="field.name" v-if="field.format == 'string'" />
+
+        <el-button @click.prevent="clickAdd(field)" v-if="field.type != 'argument'">+</el-button>
+        <el-button @click.prevent="clickRm(field)">-</el-button>
+      </el-form-item>
+    </el-form>
 
     <el-dialog v-model="dialogVisible" title="Create Node" width="500" :before-close="handleClose">
       <el-form :model="form" label-width="auto" style="max-width: 600px">
@@ -41,74 +43,100 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+  import { ref } from 'vue';
 
-interface Field {
-  type: string;
-  id: string;
-  name: string;
-  value: string;
-}
-
-interface Form {
-  type: ModuleTypes;
-  name: string;
-  format: string;
-  repeatable: boolean;
-  required: boolean;
-  options?: string[];
-}
-
-type ModuleTypes = 'argument' | 'option' | 'procedure';
-
-let fields = ref<Field[]>([]);
-let dialogVisible = ref(false);
-let form = ref<Form>({
-  type: 'argument',
-  name: '',
-  format: '',
-  repeatable: false,
-  required: false,
-});
-
-let config = ref({
-  types: ['argument', 'option', 'procedure'],
-  format: ['string', 'number', 'boolean', 'object', 'array'],
-});
-
-function handleClose() {
-  console.log('close');
-  dialogVisible.value = false;
-}
-
-function save() {
-  console.log(form.value);
-  fields.value.push({
-    type: form.value.type,
-    id: form.value.name, // 假设 id 和 name 相同，可以根据实际情况调整
-    name: form.value.name,
-    value: ''
-  });
-  dialogVisible.value = false;
-}
-
-function cancel() {
-  dialogVisible.value = false;
-}
-
-function clickAdd() {
-  console.log('add');
-  dialogVisible.value = true;
-}
-
-function clickRm() {
-  console.log('rm');
-}
-
-function addOption() {
-  if (!form.value.options) {
-    form.value.options = [];
+  interface Field {
+    id: number;
+    type: string;
+    name: string;
+    value: string;
+    format: string;
   }
-  form.value.options.push('');
-}
+
+  interface Form {
+    id: number;
+    type: ModuleTypes;
+    name: string;
+    value: string;
+    format: string;
+    repeatable: boolean;
+    required: boolean;
+    options?: string[];
+  }
+
+  type ModuleTypes = 'argument' | 'option' | 'procedure';
+
+  let fields = ref<Field[]>([]);
+  let dialogVisible = ref(false);
+  let form = ref<Form>({
+    id: 0,
+    type: 'argument',
+    name: '',
+    format: 'string',
+    value: '',
+    repeatable: false,
+    required: false,
+  });
+
+  let config = ref({
+    types: ['argument', 'option', 'procedure'],
+    format: ['string', 'number', 'boolean', 'object', 'array'],
+  });
+
+  function handleClose() {
+    console.log('close');
+    dialogVisible.value = false;
+  }
+
+  //根结点增加
+  function rootAdd() {
+    console.log('add');
+    dialogVisible.value = true;
+  }
+  function save() {
+    console.log(form.value);
+    fields.value.push({
+      id: fields.value.length + 1,
+      type: form.value.type,
+      name: form.value.name,
+      value: form.value.value,
+      format: form.value.format,
+    });
+    dialogVisible.value = false;
+  }
+
+  function cancel() {
+    dialogVisible.value = false;
+  }
+
+  function clickAdd(node) {
+    console.log('add：', node);
+    dialogVisible.value = true;
+  }
+
+  function clickRm(node) {
+    console.log(node);
+    fields.value = fields.value.filter((item) => item.id !== node.id);
+    console.log('rm');
+  }
+
+  function addOption() {
+    if (!form.value.options) {
+      form.value.options = [];
+    }
+    form.value.options.push('');
+  }
 </script>
+
+<style scoped lang="less">
+  .el-form {
+    .el-form-item {
+      :deep(.el-form-item__content) {
+        flex-wrap: nowrap !important;
+        // button {
+        //   margin-left: 10px;
+        // }
+      }
+    }
+  }
+</style>
