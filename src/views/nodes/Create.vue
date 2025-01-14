@@ -14,12 +14,12 @@
           <el-switch v-model="field.value" class="ml-2" v-if="field.format == 'boolean'" />
         </div>
         <div v-if="field.type == 'option'">
+          {{ field.type }}:{{ field.name }}
           <el-form-item v-for="(option, index) in field.options" :key="index">
-            <el-input v-model="field.options[index]" />
-            <el-button @click="clickAdd(option)">+</el-button>
-            <el-button @click="field.options.splice(index, 1)">-</el-button>
+            <div>
+              {{ option.name }}
+            </div>
           </el-form-item>
-          <div v-for="(o, i) in field.options" :key="o.id"> {{ i }}-{{ o }} </div>
         </div>
         <el-button @click.prevent="clickAdd(field)" v-if="field.type != 'argument'">+</el-button>
         <el-button @click.prevent="clickRm(field)">-</el-button>
@@ -41,6 +41,22 @@
         <el-button @click.prevent="clickAdd2Option(n)">添加到option</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog
+      v-model="addParamDialog"
+      title="Parameter List"
+      width="500"
+      :before-close="handleCloseAddParam"
+    >
+      <div
+        v-for="n in getCreatedNode()"
+        :key="n.id"
+        style="display: flex; flex-direction: column; border: solid 0.5px #ddd; border-radius: 15px"
+      >
+        <div v-for="(a, i) in n" :key="i"> {{ i }}:{{ a }} </div>
+        <el-button @click.prevent="add2Procedure(n)">添加到option</el-button>
+      </div>
+    </el-dialog>
     <el-dialog v-model="dialogVisible" title="Create Node" width="500" :before-close="handleClose">
       <el-form :model="form" label-width="auto" style="max-width: 600px">
         <el-form-item label="type">
@@ -51,7 +67,7 @@
         <el-form-item label="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="format">
+        <el-form-item label="format" v-if="form.type === 'argument'">
           <el-select v-model="form.format" placeholder="请选择一个Format类型">
             <el-option v-for="t in config.format" :label="t" :value="t" :key="t" />
           </el-select>
@@ -64,6 +80,14 @@
         </el-form-item>
         <el-form-item label="options" v-if="form.type === 'option'">
           <el-button @click="addOption()">+</el-button>
+          <div v-for="o in form.options" :key="o.id">
+            <div>{{ o.name }}</div>
+            <el-button>-</el-button>
+          </div>
+        </el-form-item>
+
+        <el-form-item label="parameter" v-if="form.type === 'procedure'">
+          <el-button @click="addParams()">+</el-button>
         </el-form-item>
         <el-button @click="save">保存</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -101,10 +125,12 @@
   type NodeType = NodeArgument | NodeProcedure | NodeOption;
   let nodes = ref<any>({});
   let dialogVisible = ref(false);
+  const addParamDialog = ref(false);
   let form = ref<NodeArgument | NodeProcedure | NodeOption>({
     id: utils.getId(),
     name: '',
     type: 'argument',
+    format: 'string',
   });
 
   let config = ref({
@@ -123,6 +149,9 @@
     //console.log('mounted');
   });
 
+  function handleCloseAddParam() {
+    addParamDialog.value = false;
+  }
   function getCreatedNode(): Array<NodeType> {
     let retList = Array<NodeType>();
     for (const k in nodes.value) {
@@ -134,6 +163,15 @@
     }
     console.log('已经生成的Node:', retList);
     return retList;
+  }
+
+  function add2Procedure(node) {
+    if (form.value.params == undefined) {
+      form.value.params = [];
+    }
+
+    form.value.params.push(node);
+    addParamDialog.value = false;
   }
 
   const CreatedNodeDialog = ref(false);
@@ -161,6 +199,11 @@
     dialogVisible.value = false;
   }
 
+  //添加参数
+  function addParams() {
+    addParamDialog.value = true;
+  }
+
   function clickAdd(node) {
     console.log('add：', node);
     curNode.value = node;
@@ -178,6 +221,9 @@
   }
 
   function clickAdd2Option(node) {
+    if (form.value.options == undefined) {
+      form.value.options = [];
+    }
     // if (curNode.value != undefined) {
     form.value.options.push(node);
     // }
