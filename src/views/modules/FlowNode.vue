@@ -72,9 +72,7 @@
     @click.stop="selectNode"
     @contextmenu.stop="showNodeContextMenu"
   >
-    <div>
-      <create-node />
-    </div>
+    <create-node />
   </div>
 
   <div

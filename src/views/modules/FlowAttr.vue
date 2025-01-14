@@ -37,6 +37,7 @@
             @change="nodeNameChange"
           />
         </a-form-item>
+        <textarea v-model="currentSelect.data"></textarea>
       </a-form>
     </a-tab-pane>
 
