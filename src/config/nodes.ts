@@ -12,11 +12,11 @@ export const commonNodes: IElement[] = [
     nodeName: '创建',
     icon: 'PlayCircleOutlined',
   },
-  {
-    type: CommonNodeTypeEnum.SIGNAL,
-    nodeName: '消息',
-    icon: 'PlayCircleOutlined',
-  },
+  // {
+  //   type: CommonNodeTypeEnum.SIGNAL,
+  //   nodeName: '消息',
+  //   icon: 'PlayCircleOutlined',
+  // },
   // {
   //   type: CommonNodeTypeEnum.COMMON,
   //   nodeName: '人工节点',

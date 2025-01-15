@@ -42,13 +42,25 @@
       width="500"
       :before-close="handleCloseCreateNode"
     >
-      <div
-        v-for="n in getCreatedNode()"
-        :key="n.id"
-        style="display: flex; flex-direction: column; border: solid 0.5px #ddd; border-radius: 15px"
-      >
-        <div v-for="(a, i) in n" :key="i"> {{ i }}:{{ a }} </div>
-        <el-button @click.prevent="clickAdd2Option(n)">添加到option</el-button>
+      <div style="display: flex">
+        <div
+          v-for="n in getCreatedNode()"
+          :key="n.id"
+          style="
+            display: flex;
+            width: 200px;
+            margin: 0 10px;
+            flex-direction: column;
+            border: solid 0.5px #ddd;
+            border-radius: 5px;
+            justify-content: center;
+          "
+        >
+          <div>name: {{ n.name }}</div>
+          <div>type: {{ n.type }}</div>
+          <div>format: {{ n.format }}</div>
+          <el-button @click.prevent="clickAdd2Option(n)">添加到option</el-button>
+        </div>
       </div>
     </el-dialog>
 
@@ -58,13 +70,26 @@
       width="500"
       :before-close="handleCloseAddParam"
     >
-      <div
-        v-for="n in getCreatedNode()"
-        :key="n.id"
-        style="display: flex; flex-direction: column; border: solid 0.5px #ddd; border-radius: 15px"
-      >
-        <div v-for="(a, i) in n" :key="i"> {{ i }}:{{ a }} </div>
-        <el-button @click.prevent="add2Procedure(n)">添加到option</el-button>
+      <div style="display: flex">
+        <div
+          v-for="n in getCreatedNode()"
+          :key="n.id"
+          style="
+            display: flex;
+            width: 200px;
+            margin: 0 10px;
+            flex-direction: column;
+            border: solid 0.5px #ddd;
+            border-radius: 5px;
+            justify-content: center;
+          "
+        >
+          <div>name: {{ n.name }}</div>
+          <div>type: {{ n.type }}</div>
+          <div>format: {{ n.format }}</div>
+
+          <el-button @click.prevent="add2Procedure(n)">添至Procedure</el-button>
+        </div>
       </div>
     </el-dialog>
     <el-dialog v-model="dialogVisible" title="Create Node" width="500" :before-close="handleClose">
@@ -90,21 +115,33 @@
         </el-form-item>
         <el-form-item label="options" v-if="form.type === 'option'">
           <el-button @click="addOption()">+</el-button>
-          <div v-for="o in (form as NodeOption).options" :key="o.id">
+        </el-form-item>
+        <div v-if="form.type === 'option'" style="display: flex">
+          <div
+            v-for="o in (form as NodeOption).options"
+            :key="o.id"
+            style="border: solid 0.5px #ddd; margin: 0 10px; padding: 5px"
+          >
             <div>{{ o.name }}</div>
+            <div>{{ o.type }}</div>
             <el-button @click.prevent="rmOption(o)">-</el-button>
           </div>
-        </el-form-item>
+        </div>
 
         <el-form-item label="parameter" v-if="form.type === 'procedure'">
-          <div>
-            <el-button @click="addParams()">+</el-button>
-          </div>
-          <div v-for="o in (form as NodeProcedure).params" :key="o.id">
-            <div>{{ o.name }}</div>
-            <el-button @click.prevent="rmParam(o)">-</el-button>
-          </div>
+          <el-button @click="addParams()">+</el-button>
         </el-form-item>
+        <div style="display: flex" v-if="form.type === 'procedure'">
+          <div
+            v-for="o in (form as NodeProcedure).params"
+            :key="o.id"
+            style="border: solid 0.5px #ddd; margin: 0 10px; padding: 5px"
+          >
+            <div>{{ o.name }}</div>
+            <div>{{ o.type }}</div>
+            <el-button @click.prevent="rmParam(o)">x</el-button>
+          </div>
+        </div>
         <el-button @click="save">保存</el-button>
         <el-button @click="cancel">取消</el-button>
       </el-form>
@@ -134,7 +171,7 @@
     required?: boolean | false;
     type: ModuleTypes | 'argument';
     name: string;
-    value?: string;
+    value?: string | boolean;
     help?: string;
     default?: string;
     format?: string;
@@ -160,12 +197,14 @@
     id: utils.getId(),
     name: '',
     type: 'argument',
+    repeatable: false,
+    required: false,
     format: 'string',
   });
 
   let config = ref({
     types: ['argument', 'option', 'procedure'],
-    format: ['string', 'number', 'boolean', 'object', 'array'],
+    format: ['string', 'number', 'boolean'],
   });
 
   let curNode = ref<NodeType>();
@@ -222,8 +261,8 @@
     if (n_proc.params == undefined) {
       n_proc.params = [];
     }
-
-    n_proc.params.push(node);
+    let node_obj = Object.assign({}, node);
+    n_proc.params.push(node_obj);
     form.value = n_proc;
     addParamDialog.value = false;
   }
@@ -241,7 +280,14 @@
   }
   function save() {
     console.log(form.value);
+
     let cNode = Object.assign({}, form.value);
+    if (cNode.type == 'procedure') {
+      delete cNode.options;
+    }
+    if (cNode.type == 'option') {
+      delete cNode.params;
+    }
     cNode.id = utils.getId();
     nodes.value[form.value.name] = cNode;
     dialogVisible.value = false;
@@ -281,8 +327,10 @@
     if (n_option.options == undefined) {
       n_option.options = [];
     }
+
+    let node_obj = Object.assign({}, node);
     // if (curNode.value != undefined) {
-    n_option.options.push(node);
+    n_option.options.push(node_obj);
     // }
     form.value = n_option;
     CreatedNodeDialog.value = false;
