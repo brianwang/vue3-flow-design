@@ -16,7 +16,6 @@ export enum CommonNodeTypeEnum {
   COMMON = 'common',
   FREEDOM = 'freedom',
   CREATE = 'create',
-  SIGNAL = 'signal',
   GATEWAY = 'gateway',
   EVENT = 'event',
   END = 'end',
