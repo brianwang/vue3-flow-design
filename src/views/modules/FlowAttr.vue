@@ -38,7 +38,7 @@
           />
         </a-form-item>
         <a-form-item label="JSON输出">
-          <json-viewer :value="(currentSelect as INode).data" :expand-depth="3" boxed copyable />
+          <json-viewer :value="(currentSelect as INode).data" :expand-depth="1" boxed copyable />
 
           <!-- <Codemirror
             :value="yaml.dump((currentSelect as INode).data)"
@@ -52,7 +52,7 @@
           <!-- <a-textarea v-model:value="(currentSelect as INode).data" /> -->
         </a-form-item>
         <a-form-item label="YAML输出">
-          <a-textarea :value="yaml.dump((currentSelect as INode).data)" style="height: 200px" />
+          <a-textarea :value="yaml.dump((currentSelect as INode).data)" style="height: 150px" />
         </a-form-item>
       </a-form>
     </a-tab-pane>

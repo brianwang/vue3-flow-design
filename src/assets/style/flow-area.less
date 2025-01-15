@@ -3,7 +3,8 @@
 .flow-area {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  // overflow: hidden;
+  overflow-y: auto;
   position: relative;
 
   &__lineX {
@@ -59,9 +60,9 @@
   }
 
   &__position {
-    position: absolute;
-    bottom: 0;
-    right: 5px;
+    position: fixed;
+    bottom: 25px;
+    right: 270px;
   }
 
   .link-active {

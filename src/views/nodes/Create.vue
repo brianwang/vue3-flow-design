@@ -37,7 +37,7 @@
     </el-form>
 
     <el-dialog
-      v-model="CreatedNodeDialog"
+      v-model="addOptionDialog"
       title="Option List"
       width="500"
       :before-close="handleCloseCreateNode"
@@ -77,6 +77,7 @@
           style="
             display: flex;
             width: 200px;
+            flex: 1;
             margin: 0 10px;
             flex-direction: column;
             border: solid 0.5px #ddd;
@@ -267,15 +268,17 @@
     addParamDialog.value = false;
   }
 
-  const CreatedNodeDialog = ref(false);
+  const addOptionDialog = ref(false);
   //关闭
   function handleCloseCreateNode() {
-    CreatedNodeDialog.value = !CreatedNodeDialog.value;
+    addOptionDialog.value = !addOptionDialog.value;
   }
 
   //根结点增加
   function rootAdd() {
     console.log('add');
+    delete form.value.options;
+    delete form.value.params;
     dialogVisible.value = true;
   }
   function save() {
@@ -307,8 +310,14 @@
 
   function clickAdd(node) {
     console.log('add：', node);
-    curNode.value = node;
-    dialogVisible.value = true;
+    if (node.type === 'option') {
+      addOptionDialog.value = true;
+    }
+    if (node.type === 'procedure') {
+      addParamDialog.value = true;
+    }
+    // curNode.value = node;
+    // dialogVisible.value = true;
   }
 
   function clickRm(node) {
@@ -319,7 +328,7 @@
   }
 
   function addOption() {
-    CreatedNodeDialog.value = true;
+    addOptionDialog.value = true;
   }
 
   function clickAdd2Option(node) {
@@ -333,7 +342,7 @@
     n_option.options.push(node_obj);
     // }
     form.value = n_option;
-    CreatedNodeDialog.value = false;
+    addOptionDialog.value = false;
   }
 </script>
 
