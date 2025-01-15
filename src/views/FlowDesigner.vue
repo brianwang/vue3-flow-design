@@ -173,6 +173,7 @@
     unref(plumb).batch(async () => {
       const nodeList = loadData.nodeList;
       nodeList.forEach((node: INode) => {
+        //node.data = {};
         flowData.nodeList.push(node);
       });
 

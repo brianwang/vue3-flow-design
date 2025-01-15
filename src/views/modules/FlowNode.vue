@@ -72,7 +72,7 @@
     @click.stop="selectNode"
     @contextmenu.stop="showNodeContextMenu"
   >
-    <create-node />
+    <create-node v-model:data="(node as INode).data" />
   </div>
 
   <div
@@ -271,6 +271,7 @@
 
   // 点击节点
   function selectNode() {
+    console.log('点击Node', currentNode);
     currentSelect.value = currentNode;
     emits('isMultiple', (flag: boolean) => {
       if (!flag) {

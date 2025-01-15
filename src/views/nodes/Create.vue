@@ -14,10 +14,20 @@
           <el-switch v-model="field.value" class="ml-2" v-if="field.format == 'boolean'" />
         </div>
         <div v-if="field.type == 'option'">
-          {{ field.type }}:{{ field.name }}
+          类型：{{ field.type }}
           <el-form-item v-for="(option, index) in field.options" :key="index">
+            选项:
             <div>
               {{ option.name }}
+            </div>
+          </el-form-item>
+        </div>
+        <div v-if="field.type == 'procedure'">
+          类型:{{ field.type }}
+          <el-form-item v-for="(param, index) in field.params" :key="index">
+            参数：
+            <div>
+              {{ param.name }}
             </div>
           </el-form-item>
         </div>
@@ -28,7 +38,7 @@
 
     <el-dialog
       v-model="CreatedNodeDialog"
-      title="Node List"
+      title="Option List"
       width="500"
       :before-close="handleCloseCreateNode"
     >
@@ -80,14 +90,20 @@
         </el-form-item>
         <el-form-item label="options" v-if="form.type === 'option'">
           <el-button @click="addOption()">+</el-button>
-          <div v-for="o in form.options" :key="o.id">
+          <div v-for="o in (form as NodeOption).options" :key="o.id">
             <div>{{ o.name }}</div>
-            <el-button>-</el-button>
+            <el-button @click.prevent="rmOption(o)">-</el-button>
           </div>
         </el-form-item>
 
         <el-form-item label="parameter" v-if="form.type === 'procedure'">
-          <el-button @click="addParams()">+</el-button>
+          <div>
+            <el-button @click="addParams()">+</el-button>
+          </div>
+          <div v-for="o in (form as NodeProcedure).params" :key="o.id">
+            <div>{{ o.name }}</div>
+            <el-button @click.prevent="rmParam(o)">-</el-button>
+          </div>
         </el-form-item>
         <el-button @click="save">保存</el-button>
         <el-button @click="cancel">取消</el-button>
@@ -99,6 +115,18 @@
 <script lang="ts" setup>
   import { onMounted, ref, watch } from 'vue';
   import { utils } from '/@/utils/common';
+
+  const props = defineProps({
+    data: {
+      type: Object,
+      default: () => ({}),
+    },
+    yaml: {
+      type: Object,
+      default: () => ({}),
+    },
+  });
+
   type ModuleTypes = 'argument' | 'option' | 'procedure';
   interface NodeArgument {
     id: string;
@@ -122,8 +150,10 @@
     options: Array<NodeChoice>;
   }
 
+  const emits = defineEmits(['update:data']);
+
   type NodeType = NodeArgument | NodeProcedure | NodeOption;
-  let nodes = ref<any>({});
+  let nodes = ref<any>(props.data);
   let dialogVisible = ref(false);
   const addParamDialog = ref(false);
   let form = ref<NodeArgument | NodeProcedure | NodeOption>({
@@ -165,12 +195,36 @@
     return retList;
   }
 
+  watch(
+    () => props.data,
+    (val) => {
+      nodes.value = val;
+      // props.yaml =
+    },
+    { deep: true },
+  );
+
+  function rmOption(node) {
+    console.log('删除 procedure 的参数:', node);
+    let n_option = form.value as NodeOption;
+    n_option.options = n_option.options.filter((i) => i.id !== node.id);
+    form.value = n_option;
+  }
+
+  function rmParam(node) {
+    console.log('删除 procedure 的参数:', node);
+    let n_proc = form.value as NodeProcedure;
+    n_proc.params = n_proc.params.filter((i) => i.id !== node.id);
+    form.value = n_proc;
+  }
   function add2Procedure(node) {
-    if (form.value.params == undefined) {
-      form.value.params = [];
+    let n_proc = form.value as NodeProcedure;
+    if (n_proc.params == undefined) {
+      n_proc.params = [];
     }
 
-    form.value.params.push(node);
+    n_proc.params.push(node);
+    form.value = n_proc;
     addParamDialog.value = false;
   }
 
@@ -193,6 +247,7 @@
     dialogVisible.value = false;
     curNode.value = cNode;
     console.log(nodes.value);
+    emits('update:data', nodes);
   }
 
   function cancel() {
@@ -212,7 +267,8 @@
 
   function clickRm(node) {
     console.log(node);
-    nodes.value = nodes.value.filter((item) => item.id !== node.id);
+    delete nodes.value[node.name];
+    // nodes.value = nodes.value.filter((item) => item.id !== node.id);
     console.log('rm');
   }
 
@@ -221,12 +277,14 @@
   }
 
   function clickAdd2Option(node) {
-    if (form.value.options == undefined) {
-      form.value.options = [];
+    let n_option = form.value as NodeOption;
+    if (n_option.options == undefined) {
+      n_option.options = [];
     }
     // if (curNode.value != undefined) {
-    form.value.options.push(node);
+    n_option.options.push(node);
     // }
+    form.value = n_option;
     CreatedNodeDialog.value = false;
   }
 </script>

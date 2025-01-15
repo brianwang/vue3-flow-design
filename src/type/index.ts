@@ -32,7 +32,8 @@ export interface INode {
   icon?: string;
   id: string;
   nodeName: string;
-  data?: string;
+  data?: Object;
+  yaml?: Object;
   type: string;
   width: number;
   x: number;
@@ -45,7 +46,6 @@ export interface ILink {
   sourceId?: string;
   targetId?: string;
   label: string;
-  data?: string;
   cls: {
     linkType: string;
     linkColor: string;

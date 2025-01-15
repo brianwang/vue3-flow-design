@@ -37,7 +37,23 @@
             @change="nodeNameChange"
           />
         </a-form-item>
-        <textarea v-model="currentSelect.data"></textarea>
+        <a-form-item label="JSON输出">
+          <json-viewer :value="(currentSelect as INode).data" :expand-depth="3" boxed copyable />
+
+          <!-- <Codemirror
+            :value="yaml.dump((currentSelect as INode).data)"
+            :options="cmOptions"
+            ref="cmRef"
+            height="400"
+            @change="onChange"
+            @input="onInput"
+            @ready="onReady"
+          /> -->
+          <!-- <a-textarea v-model:value="(currentSelect as INode).data" /> -->
+        </a-form-item>
+        <a-form-item label="YAML输出">
+          <a-textarea :value="yaml.dump((currentSelect as INode).data)" style="height: 200px" />
+        </a-form-item>
       </a-form>
     </a-tab-pane>
 
@@ -69,9 +85,38 @@
 
 <script lang="ts" setup>
   import { ChangeEvent } from 'ant-design-vue/lib/_util/EventInterface';
-  import { ref, watch, unref, PropType } from 'vue';
+  import { ref, watch, unref, PropType, reactive } from 'vue';
+  import { JsonViewer } from 'vue3-json-viewer';
+  import 'vue3-json-viewer/dist/index.css';
+  // import 'codemirror/mode/javascript/javascript.js';
+  // import Codemirror from 'codemirror-editor-vue3';
+  import yaml from 'js-yaml';
+  // import type { CmComponentRef } from 'codemirror-editor-vue3';
+  // import type { Editor, EditorConfiguration } from 'codemirror';
+
   import { INode, ILink, NodesType } from '/@/type/index';
   import { CommonNodeTypeEnum, ActiveTypeEnum } from '/@/type/enums';
+  // const cmOptions: EditorConfiguration = reactive({
+  //   mode: 'text/x-yaml',
+  //   theme: 'default',
+  //   readOnly: false,
+  //   lineNumbers: true,
+  //   lineWiseCopyCut: true,
+  //   gutters: ['CodeMirror-lint-markers'],
+  //   lint: true,
+  // });
+  // const onChange = (val: string, cm: Editor) => {
+  //   console.log(val);
+  //   console.log(cm.getValue());
+  // };
+
+  // const onInput = (val: string) => {
+  //   console.log(val);
+  // };
+
+  // const onReady = (cm: Editor) => {
+  //   console.log(cm.focus());
+  // };
 
   const props = defineProps({
     plumb: {
@@ -157,6 +202,10 @@
   watch(
     () => currentSelect.value,
     (currentSelect) => {
+      console.log('select change!');
+      let strnode = JSON.stringify(currentSelect);
+      console.log(strnode);
+      console.log('currentSelect value:', currentSelect);
       emits('update:select', currentSelect);
     },
   );
