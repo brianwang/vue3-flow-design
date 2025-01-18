@@ -12,19 +12,6 @@
         <a-form-item label="Process id">
           <a-input :value="flowData.attr.id" disabled />
         </a-form-item>
-        <a-form-item lable="Json List">
-          <a-list item-layout="horizontal" :data-source="data">
-            <template #renderItem="{ item }">
-              <a-list-item>
-                <a-list-item-meta description="">
-                  <template #title>
-                    <a-button @click.prevent="clickFile(item.url)">{{ item.title }}</a-button>
-                  </template>
-                </a-list-item-meta>
-              </a-list-item>
-            </template>
-          </a-list>
-        </a-form-item>
       </a-form>
     </a-tab-pane>
 
@@ -37,19 +24,32 @@
         </span>
       </template>
       <a-form layout="vertical">
-        <a-form-item label="Type">
+        <!-- <a-form-item label="Type">
           <a-tag color="purple">{{ currentSelect.type }}</a-tag>
+        </a-form-item> -->
+        <a-form-item lable="Json List">
+          <a-list item-layout="horizontal" :data-source="datalist">
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <a-list-item-meta description="">
+                  <template #title>
+                    <a-button @click.prevent="clickFile(item.d)">{{ item.title }}</a-button>
+                  </template>
+                </a-list-item-meta>
+              </a-list-item>
+            </template>
+          </a-list>
         </a-form-item>
-        <a-form-item label="id">
+        <!-- <a-form-item label="id">
           <a-input :value="currentSelect.id" disabled />
-        </a-form-item>
-        <a-form-item label="Name" v-if="isAllowChange(currentSelect.type as NodesType)">
+        </a-form-item> -->
+        <!-- <a-form-item label="Name" v-if="isAllowChange(currentSelect.type as NodesType)">
           <a-input
             placeholder="Please input node name"
             :value="(currentSelect as INode)?.nodeName"
             @change="nodeNameChange"
           />
-        </a-form-item>
+        </a-form-item> -->
         <a-form-item label="JSON Output">
           <json-viewer :value="(currentSelect as INode).data" :expand-depth="1" boxed copyable />
 
@@ -131,10 +131,36 @@
   //   console.log(cm.focus());
   // };
 
-  const data = ref([
+  const datalist = ref([
     {
       title: 'create.json',
       url: 'http://localhost:9999/a.json',
+      d: {
+        primarykey: {
+          type: 'procedure',
+          required: true,
+          fpkey: {
+            format: 'int',
+            default: 0,
+            help: 'The first primary key',
+          },
+        },
+      },
+    },
+    {
+      title: 'create1.json',
+      url: 'http://localhost:9999/a.json',
+      d: {
+        primarykey: {
+          type: 'procedure',
+          required: true,
+          fpkey: {
+            format: 'int',
+            default: 0,
+            help: 'The first primary key',
+          },
+        },
+      },
     },
   ]);
 
@@ -174,8 +200,9 @@
     ].includes(type as CommonNodeTypeEnum);
   }
 
-  function clickFile(file) {
-    console.log(file);
+  function clickFile(data) {
+    console.log(data);
+    (currentSelect.value as INode).data = data;
   }
 
   // 修改连接文本

@@ -238,10 +238,10 @@
   watch(
     () => props.data,
     (val) => {
+      console.log('watch create node data:', val);
       nodes.value = val;
       // props.yaml =
     },
-    { deep: true },
   );
 
   function rmOption(node) {
