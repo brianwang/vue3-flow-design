@@ -1,7 +1,7 @@
 <template>
   <a-layout-sider width="44" class="flow-element">
     <a-row>
-      <div class="tab">基础</div>
+      <div class="tab">Basic</div>
       <FlowElementList
         :nodeList="commonNodes"
         :belongTo="NodeTypeEnum.Common_Node_Type"

@@ -5,12 +5,25 @@
       <template #tab>
         <span>
           <component :is="'ClusterOutlined'" />
-          流程属性
+          Process Attribute
         </span>
       </template>
       <a-form layout="vertical">
-        <a-form-item label="流程id">
+        <a-form-item label="Process id">
           <a-input :value="flowData.attr.id" disabled />
+        </a-form-item>
+        <a-form-item lable="Json List">
+          <a-list item-layout="horizontal" :data-source="data">
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <a-list-item-meta description="">
+                  <template #title>
+                    <a-button @click.prevent="clickFile(item.url)">{{ item.title }}</a-button>
+                  </template>
+                </a-list-item-meta>
+              </a-list-item>
+            </template>
+          </a-list>
         </a-form-item>
       </a-form>
     </a-tab-pane>
@@ -20,24 +33,24 @@
       <template #tab>
         <span>
           <component :is="'ProfileOutlined'" />
-          节点属性
+          Node Attribute
         </span>
       </template>
       <a-form layout="vertical">
-        <a-form-item label="类型">
+        <a-form-item label="Type">
           <a-tag color="purple">{{ currentSelect.type }}</a-tag>
         </a-form-item>
         <a-form-item label="id">
           <a-input :value="currentSelect.id" disabled />
         </a-form-item>
-        <a-form-item label="名称" v-if="isAllowChange(currentSelect.type as NodesType)">
+        <a-form-item label="Name" v-if="isAllowChange(currentSelect.type as NodesType)">
           <a-input
-            placeholder="请输入节点名称"
+            placeholder="Please input node name"
             :value="(currentSelect as INode)?.nodeName"
             @change="nodeNameChange"
           />
         </a-form-item>
-        <a-form-item label="JSON输出">
+        <a-form-item label="JSON Output">
           <json-viewer :value="(currentSelect as INode).data" :expand-depth="1" boxed copyable />
 
           <!-- <Codemirror
@@ -51,7 +64,7 @@
           /> -->
           <!-- <a-textarea v-model:value="(currentSelect as INode).data" /> -->
         </a-form-item>
-        <a-form-item label="YAML输出">
+        <a-form-item label="YAML Output">
           <a-textarea :value="yaml.dump((currentSelect as INode).data)" style="height: 150px" />
         </a-form-item>
       </a-form>
@@ -118,6 +131,13 @@
   //   console.log(cm.focus());
   // };
 
+  const data = ref([
+    {
+      title: 'create.json',
+      url: 'http://localhost:9999/a.json',
+    },
+  ]);
+
   const props = defineProps({
     plumb: {
       type: Object,
@@ -152,6 +172,10 @@
       CommonNodeTypeEnum.GATEWAY,
       CommonNodeTypeEnum.EVENT,
     ].includes(type as CommonNodeTypeEnum);
+  }
+
+  function clickFile(file) {
+    console.log(file);
   }
 
   // 修改连接文本

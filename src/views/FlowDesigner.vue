@@ -155,11 +155,42 @@
 
   // 初始化流程图
   function initFlow() {
-    if (flowData.status === FlowStatusEnum.CREATE) {
-      flowData.attr.id = 'flow-' + utils.getId();
-    } else {
-      loadFlow();
-    }
+    // if (flowData.status === FlowStatusEnum.CREATE) {
+    //   flowData.attr.id = 'flow-' + utils.getId();
+    // } else {
+    // let data = JSON.stringify({
+    //   nodeList: [
+    //     {
+    //       type: 'create',
+    //       nodeName: '创建',
+    //       height: 50,
+    //       x: 275,
+    //       width: 120,
+    //       y: 195,
+    //       data: {
+    //         primarykey: {
+    //           required: true,
+    //           fpkey: {
+    //             format: 'int',
+    //             default: 0,
+    //             help: 'The first primary key',
+    //           },
+    //         },
+    //       },
+    //     },
+    //   ],
+    //   attr: {
+    //     id: 'flow-' + utils.getId(),
+    //   },
+    //   config: {
+    //     showGrid: true,
+    //     showGridText: '隐藏网格',
+    //     showGridIcon: 'EyeOutlined',
+    //   },
+    // });
+    // loadFlow(data);
+    //}
+    // loadFlow();
   }
 
   // 渲染流程

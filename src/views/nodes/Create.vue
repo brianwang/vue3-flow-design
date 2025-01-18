@@ -14,18 +14,18 @@
           <el-switch v-model="field.value" class="ml-2" v-if="field.format == 'boolean'" />
         </div>
         <div v-if="field.type == 'option'">
-          类型：{{ field.type }}
+          type：{{ field.type }}
           <el-form-item v-for="(option, index) in field.options" :key="index">
-            选项:
+            option:
             <div>
               {{ option.name }}
             </div>
           </el-form-item>
         </div>
         <div v-if="field.type == 'procedure'">
-          类型:{{ field.type }}
+          type:{{ field.type }}
           <el-form-item v-for="(param, index) in field.params" :key="index">
-            参数：
+            param：
             <div>
               {{ param.name }}
             </div>
@@ -59,7 +59,7 @@
           <div>name: {{ n.name }}</div>
           <div>type: {{ n.type }}</div>
           <div>format: {{ n.format }}</div>
-          <el-button @click.prevent="clickAdd2Option(n)">添加到option</el-button>
+          <el-button @click.prevent="clickAdd2Option(n)">Add to Option</el-button>
         </div>
       </div>
     </el-dialog>
@@ -89,14 +89,14 @@
           <div>type: {{ n.type }}</div>
           <div>format: {{ n.format }}</div>
 
-          <el-button @click.prevent="add2Procedure(n)">添至Procedure</el-button>
+          <el-button @click.prevent="add2Procedure(n)">Add to Procedure</el-button>
         </div>
       </div>
     </el-dialog>
     <el-dialog v-model="dialogVisible" title="Create Node" width="500" :before-close="handleClose">
       <el-form :model="form" label-width="auto" style="max-width: 600px">
         <el-form-item label="type">
-          <el-select v-model="form.type" placeholder="请选择一个Module类型">
+          <el-select v-model="form.type" placeholder="Select a type">
             <el-option v-for="t in config.types" :label="t" :value="t" :key="t" />
           </el-select>
         </el-form-item>
@@ -104,7 +104,7 @@
           <el-input v-model="form.name" />
         </el-form-item>
         <el-form-item label="format" v-if="form.type === 'argument'">
-          <el-select v-model="form.format" placeholder="请选择一个Format类型">
+          <el-select v-model="form.format" placeholder="Please select format">
             <el-option v-for="t in config.format" :label="t" :value="t" :key="t" />
           </el-select>
         </el-form-item>
@@ -143,8 +143,8 @@
             <el-button @click.prevent="rmParam(o)">x</el-button>
           </div>
         </div>
-        <el-button @click="save">保存</el-button>
-        <el-button @click="cancel">取消</el-button>
+        <el-button @click="save">Save</el-button>
+        <el-button @click="cancel">Cancel</el-button>
       </el-form>
     </el-dialog>
   </div>
